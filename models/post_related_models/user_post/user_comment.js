@@ -1,4 +1,4 @@
-const mongoose = require('../../../db/user_connection')
+const mongoose = require('../../../db/connection')
 
 const userCommentSchema = new mongoose.Schema({
     author: { type: String, required: true},

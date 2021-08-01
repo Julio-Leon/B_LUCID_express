@@ -1,5 +1,5 @@
 const userCommentSchema = require('./user_comment')
-const mongoose = require('../../../db/user_connection')
+const mongoose = require('../../../db/connection')
 
 const userPostSchema = new mongoose.Schema({
     title: { type: String, required: true},

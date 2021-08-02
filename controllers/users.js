@@ -2,8 +2,8 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
 const { requireToken, createUserToken } = require('../config/passport')
-require('../config/google_passport')
-const passport = require('passport')
+// require('../config/google_passport')
+const passport = require('../config/google_passport')
 
 const saltRounds = 10;
 
@@ -129,5 +129,5 @@ router.get('/google/callback', passport.authenticate('google', {
                 next(error)
             }
         })
-        
+
         module.exports = router

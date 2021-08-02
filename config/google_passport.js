@@ -15,7 +15,8 @@ passport.deserializeUser(function(id, done) {
 passport.use(new GoogleStrategy({
     clientID: '503113550973-utib4nomeecs41e5q3ddp0f4kojpinum.apps.googleusercontent.com',
     clientSecret: 'k7rElDO_96F_d4X4g5EZOCNc',
-    callbackURL: "http://localhost:4000/users/google/callback"
+    // callbackURL: "http://localhost:4000/users/google/callback",
+    callbackURL: "https://boiling-caverns-35260.herokuapp.com/users/google/callback"
   },
   async (token, tokenSecret, profile, done) => {
     console.log(profile)

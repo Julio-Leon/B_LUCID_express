@@ -1,6 +1,7 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/user')
+require('dotenv').config()
 
 passport.serializeUser(function(user, done) {
     done(null, user.id);
@@ -13,8 +14,8 @@ passport.deserializeUser(function(id, done) {
 });
 
 passport.use(new GoogleStrategy({
-    clientID: '503113550973-utib4nomeecs41e5q3ddp0f4kojpinum.apps.googleusercontent.com',
-    clientSecret: 'k7rElDO_96F_d4X4g5EZOCNc',
+    clientID: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
     // callbackURL: "http://localhost:4000/users/google/callback",
     callbackURL: "https://boiling-caverns-35260.herokuapp.com/users/google/callback"
   },

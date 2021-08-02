@@ -16,7 +16,7 @@ const opts = {
 };
 
 const strategy = new JWTStrategy(opts, (jwt_payload, done) => {
-    User.findById(jwt_payload.id, (err, user) => {
+    User.findOne(jwt_payload.id, (err, user) => {
 
         if (err) {
             return done(err, false)
@@ -43,7 +43,7 @@ const createUserToken = (req, user) => {
         const error = new Error('The provided username or password is incorrect')
         throw error
     }
-    return jwt.sign(user, secret, { expiresIn: 3600})
+    return jwt.sign(user.toJSON(), secret, { expiresIn: 3600})
 }
 
 module.exports = {

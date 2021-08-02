@@ -9,15 +9,16 @@ const saltRounds = 10;
 const User = require('../models/user')
 const { findOne } = require('../models/user')
 
-// const isLoggedIn = (req, res, next) => {
-//     if (req.user) {
-//         next()
-//     } else {
-//         res.sendStatus(401)
-//     }
-// }
+router.get('/:email', async (req, res, next) => {
+    try {
+        const user = await User.findOne({ email: req.params.email })
+        res.status(200).json(user)
+    } catch (error) {
+        next(error)
+    }
+})
 
-router.get('/', requireToken, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
     try {
         const users = await User.find()
         res.json(users)
@@ -121,14 +122,10 @@ router.post('/login', async (req, res, next) => {
     try {
         const user = await User.findOne({ email: req.body.email })
         const token = createUserToken(req, user)
-        res.json({ token })
+        res.json({ token, user })
     } catch (error) {
         next(error)
     }
-})
-
-router.get('/logout', async (req, res) => {
-    req.logout()
 })
 
 module.exports = router

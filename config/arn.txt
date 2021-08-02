@@ -1,0 +1,1 @@
+arn:aws:iam::222306462410:user/b-lucid-upload

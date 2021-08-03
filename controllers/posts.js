@@ -77,3 +77,4 @@ router.post('/upload/:email', upload.single('file'), async (req, res) => {
     }
 } )
 
+module.exports = router

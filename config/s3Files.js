@@ -26,7 +26,7 @@ const s3Upload = (file) => {
         Bucket: 'blucidfiles', // <-- Add your configured bucket here
         Key: `${uuid.v4()}_${file.originalname}`,
         Body: file.buffer,
-        ContentType: file.mimetype,
+        ContentType: file.type,
         ACL: 'public-read',
       };
       // Upload everything and use the callback
@@ -42,7 +42,7 @@ const s3Upload = (file) => {
     });
   } else {
     // If there wasn't a file, return null rather than error out
-    return null;
+    return 'no file';
   }
 };
 

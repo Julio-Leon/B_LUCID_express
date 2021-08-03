@@ -56,7 +56,7 @@ const Post = require('../models/post_related_models/post')
 
 router.post('/upload/:email', upload.single('file'), async (req, res) => {
     try {
-        const file = await s3Files(req.file)
+        const file = await s3Files(req.body)
 
         const post = {
             ...req.body,
@@ -70,7 +70,7 @@ router.post('/upload/:email', upload.single('file'), async (req, res) => {
             fileURL: file
         })
 
-        res.send('Bad')
+        res.status(201).json(newPost)
 
     } catch (error) {
         console.error(error)

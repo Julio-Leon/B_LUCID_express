@@ -70,9 +70,7 @@ router.post('/upload/:email', upload.single('file'), async (req, res) => {
             fileURL: file
         })
 
-        res.status(201).json([
-            newUser, newPost
-        ])
+        res.send('Bad')
 
     } catch (error) {
         console.error(error)

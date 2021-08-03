@@ -30,7 +30,7 @@ const UserController = require('./controllers/users');
 app.use('/users', UserController)
 
 const PostController = require('./controllers/posts');
-app.use('/users', PostController)
+app.use('/posts', PostController)
 
 app.listen(PORT, () => {
     console.log('D-LUCID API is running on port:', PORT)

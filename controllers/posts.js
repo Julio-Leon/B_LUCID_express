@@ -58,12 +58,12 @@ router.post('/upload/:email', upload.single('file'), async (req, res) => {
     try {
         const file = await s3Files(req.file)
 
-        const newPost = {
+        const post = {
             ...req.body,
             fileURL: file
         }
 
-        const newUser = await User.findOneAndUpdate({ email: req.params.email }, { $push: { posts: newPost}})
+        const newUser = await User.findOneAndUpdate({ email: req.params.email }, { $push: { posts: post}})
 
         const newPost = await Post.create({
             ...req.body,

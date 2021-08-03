@@ -1,4 +1,4 @@
-const mongoose = require('../../db/post_connection');
+const mongoose = require('../../db/connection');
 
 const commentSchema = new mongoose.Schema({
     author: { type: String, required: true},

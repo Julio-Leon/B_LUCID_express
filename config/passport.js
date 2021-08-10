@@ -43,10 +43,15 @@ const createUserToken = (req, user) => {
         const error = new Error('The provided username or password is incorrect')
         throw error
     }
-    return jwt.sign(user.toJSON(), secret, { expiresIn: 3600})
+    return jwt.sign(user.toJSON(), secret, { expiresIn: 604800})
+}
+
+const signToken = user => {
+    return jwt.sign({ data: user }, secret, { expiresIn: 604800})
 }
 
 module.exports = {
+    signToken,
     requireToken,
     createUserToken
 }

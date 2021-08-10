@@ -1,58 +1,129 @@
 const express = require('express')
-// const path = require('path')
-// const crypto = require('crypto')
+const { v4: uuidv4} = require('uuid')
+
 const multer = require('multer')
 const upload = multer()
 const s3Files = require('../config/s3Files')
-// const GridFsStorage = require('multer-gridfs-storage')
-// const Grid = require('gridfs-stream')
+
 const router = express.Router()
 const { requireToken } = require('../config/passport')
 require('dotenv').config()
 
 const User = require('../models/user')
-const UserPost = require('../models/post_related_models/user_post/user_post')
 const Post = require('../models/post_related_models/post')
 
-// const userStorage = new GridFsStorage({
-//     url: process.env.BLUCID_DATABASE_URL,
-//     file: (req, file) => {
-//         return new Promise((resolve, reject) => {
-//             crypto.randomBytes(16, (err, buf) => {
-//             if (err) {
-//                 return reject(err);
-//             }
-//             const filename = buf.toString('hex') + path.extname(file.originalname);
-//             const fileInfo = {
-//                 filename: filename,
-//                 bucketName: 'users'
-//             };
-//             resolve(fileInfo);
-//             });
-//         });
-//     }
-// });
-// const userUpload = multer({ userStorage });
+router.delete('/comment/:id')
 
-// const storage = new GridFsStorage({
-//     url: process.env.BLUCID_DATABASE_URL,
-//     file: (req, file) => {
-//         return new Promise((resolve, reject) => {
-//             crypto.randomBytes(16, (err, buf) => {
-//             if (err) {
-//                 return reject(err);
-//             }
-//             const filename = buf.toString('hex') + path.extname(file.originalname);
-//             const fileInfo = {
-//                 filename: filename,
-//                 bucketName: 'posts'
-//             };
-//             resolve(fileInfo);
-//             });
-//         });
-//     }
-// });
-// const upload = multer({ storage });
+router.post('/comment/:id', async (req, res) => {
+    try {
+        console.log(req.body)
+        const newPost = await Post.findByIdAndUpdate(req.params.id, {$push: {comments: req.body}})
+        console.log(newPost)
+        res.status(201).json(newPost)
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+router.get('/user/:username', async (req, res) => {
+    try {
+        const userPosts = await Post.find({ user: req.params.username })
+        console.log(userPosts)
+        res.status(201).json(userPosts)
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+router.delete('/delete/:id', async (req, res) => {
+    try {
+        const deletedPost = await Post.findByIdAndRemove(req.params.id)
+        res.status(204).json(deletedPost)
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+router.put('/edit/:id', async (req, res) => {
+    try {
+        const newPost = await Post.findByIdAndUpdate(req.params.id, {
+            title: req.body.title,
+            description: req.body.description
+        })
+        console.log(newPost)
+        res.status(201).json(newPost)
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+router.post('/decrement-like/:id', async (req, res) => {
+    try {
+
+        const post = await Post.findById(req.params.id)
+
+        const newLikes = post.likes.filter(like => like !== req.body.userID)
+
+        const newPost = await Post.findByIdAndUpdate(req.params.id, {likes: newLikes})
+
+        res.status(201)
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+router.post('/increment-like/:id', async (req, res) => {
+    try {
+
+        const newPost = await Post.findByIdAndUpdate(req.params.id, {
+            $push: {likes: req.body.userID}
+        })
+
+        res.status(201)
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+
+router.post('/upload', async (req, res) => {
+    try {
+
+        const postUUID = uuidv4()
+
+        const newPostBody = {
+            title: req.body.title,
+            description: req.body.description,
+            fileURL: req.body.fileURL,
+            fileType: req.body.fileType,
+            likes: req.body.likes,
+            dislikes: req.body.dislikes,
+            user: req.body.user,
+            postUUID: postUUID
+        }
+        const newPost = await Post.create(newPostBody)
+        
+        const updatedUser = await User.findByIdAndUpdate(req.body.userID, {$push: {posts: {...req.body, postUUID: postUUID}}})
+        
+        res.status(201).json({
+            updatedUser: updatedUser,
+            newPost: newPost
+        })
+        
+    } catch (error) {
+        console.error(error)
+    }
+})
+
+router.get('/:first/:last', async (req, res, next) => {
+    try {
+        const posts = await Post.find()
+        const returnPosts = posts.filter((post, i) => i >= Number(req.params.first) && i < Number(req.params.last))
+        res.status(200).json(returnPosts)
+    } catch (error) {
+        next(error)
+    }
+})
 
 router.post('/upload/:email', upload.single('file'), async (req, res) => {
     try {

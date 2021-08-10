@@ -8,7 +8,6 @@ const userSchema = new mongoose.Schema({
     password: String,
     imageURL: String,
     bannerURL: String,
-    posts: [userPostSchema]
 }, {
     timestamps: true
 })

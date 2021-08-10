@@ -3,10 +3,11 @@ const mongoose = require('../../db/connection')
 
 const postSchema = new mongoose.Schema({
     title: { type: String, required: true},
-    videoURL: { type: String, required: true },
+    fileURL: String,
+    fileType: String,
+    description: { type: String, required: true},
     user: { type: String, required: true },
-    likes: { type: Number, required: true},
-    dislikes: { type: Number, required: true },
+    likes: { type: Array, default: [] },
     comments: [commentSchema]
 }, {
     timestamps: true

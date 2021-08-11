@@ -2,22 +2,22 @@
 
 The backend for the B-LUCID web app.
 
-Models:
-  User:
-    username
-    email
-    password
-  Post:
-    title
-    file
-    fileType
-    user
-    likes
-    comments
-  Comment:
-    author
-    body
-    postRef
+  Models:
+    User:
+      username
+      email
+      password
+    Post:
+      title
+      file
+      fileType
+      user
+      likes
+      comments
+    Comment:
+      author
+      body
+      postRef
     
 Routes:
   Users:
